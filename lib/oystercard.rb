@@ -17,7 +17,7 @@ class Oystercard
 
   def touch_in(entry_station)
   	fail "Balance too low : Top up Please" if @balance < MINIMUM_BALANCE
-    # start_journey(entry_station)
+    #deduct(PENALTY_FARE) if @in_journey?
   	@entry_station = entry_station
     @in_journey = true
   end
