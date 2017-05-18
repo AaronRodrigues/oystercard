@@ -7,7 +7,7 @@ class Journey
   def initialize(entry_point, exit_point)
     @entry_point = entry_point
     @exit_point = exit_point
-    
+
   end
 
   def show_last_trip
@@ -22,4 +22,9 @@ class Journey
   def complete
     false
   end
+
+def finish(exit_point)
+	@exit_point
+end
+
 end

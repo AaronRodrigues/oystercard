@@ -35,24 +35,25 @@ describe Journey do
 
   describe '#fare' do
     it 'calculates the fare' do
-      # oystercard.touch_in("entry_station")
-      # p journey.entry_point
-      # oystercard.touch_out("exit_station")
-
-      expect(journey_completed.fare).to eq described_class::MINIMUM_FARE
+    expect(journey_completed.fare).to eq described_class::MINIMUM_FARE
     end
 
     it "charges the penalty fare if a passenger doesn't touch in" do
-      # oystercard2.touch_in(nil)
-      # p @entry_point
-      # oystercard2.touch_out('Aldgate')
-      # p @entry_point
       p journey_with_no_touch_in.entry_point
       expect(journey_with_no_touch_in.fare).to eq described_class::PENALTY_FARE
     end
 
+    it "has a penalty fare by default" do
+      expect(journey.fare).to eq described_class::PENALTY_FARE
+    end
+
     it 'charges a penalty fare if a passenger does not touch out' do
       expect(journey_with_no_touch_out.fare).to eq described_class::PENALTY_FARE
+    end
+
+    it "should return itself when exiting a journey" do
+      allow(journey).to receive(:finish) { journey }
+      expect(journey.finish("exit_point")).to eq(journey)
     end
   end
 end
