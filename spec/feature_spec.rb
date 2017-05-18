@@ -1,5 +1,5 @@
-# require './lib/oystercard.rb'
-#
+# require 'oystercard'
+
 # oystercard = Oystercard.new
 # oystercard.top_up 90
 # oystercard.touch_in "Fulham"

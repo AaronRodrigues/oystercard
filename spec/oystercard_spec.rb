@@ -11,21 +11,20 @@ describe Oystercard do
   it { is_expected.to respond_to(:touch_out).with(1).argument }
   it { is_expected.to respond_to(:entry_station) }
 
-
-  it "instance has default value of 0" do
+  it 'instance has default value of 0' do
     expect(oystercard.balance).to eq(0)
   end
 
   describe '#top_up' do
-    it "can top up the balance" do
-      expect{ oystercard.top_up 1}.to change{oystercard.balance}.by 1
+    it 'can top up the balance' do
+      expect { oystercard.top_up 1 }.to change { oystercard.balance }.by 1
     end
   end
 
   it 'raises an error if the maximum balance is exceeded' do
-  	maximum_balance = Oystercard::MAXIMUM_BALANCE
-  	oystercard.top_up maximum_balance
-  	expect{ oystercard.top_up 1 }.to raise_error "Maximum balance of #{maximum_balance} exceeded"
+    maximum_balance = Oystercard::MAXIMUM_BALANCE
+    oystercard.top_up maximum_balance
+    expect { oystercard.top_up 1 }.to raise_error "Maximum balance of #{maximum_balance} exceeded"
   end
 
   describe '#in_journey?' do
@@ -52,13 +51,13 @@ describe Oystercard do
     end
 
     it 'Raises an error when balance below £1' do
-      expect{oystercard.touch_in(entry_station)}.to raise_error "Balance too low : Top up Please"
+      expect { oystercard.touch_in(entry_station) }.to raise_error 'Balance too low : Top up Please'
     end
 
     it 'Raises an error when topped up and balance goes below £1' do
       oystercard.top_up 1
       oystercard.touch_out(exit_station)
-      expect{oystercard.touch_in(entry_station)}.to raise_error "Balance too low : Top up Please"
+      expect { oystercard.touch_in(entry_station) }.to raise_error 'Balance too low : Top up Please'
     end
 
     it 'Shows us the entry_station last touched in at' do
@@ -69,9 +68,6 @@ describe Oystercard do
 
     it ' shows that a card has an empty list of journeys' do
       expect(oystercard.list_of_journeys).to be_empty
-      
     end
   end
 end
-
-
