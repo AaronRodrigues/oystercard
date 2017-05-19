@@ -1,18 +1,21 @@
 require 'oystercard'
+require 'journey'
 
 describe Oystercard do
   subject(:oystercard) { described_class.new }
   let(:entry_station) { double :entry_station }
   let(:exit_station) { double :exit_station }
-  let(:journey) { double :journey }
-  it { is_expected.to respond_to(:top_up).with(1).argument }
+  # let(:journey) { double :journey }
   it { is_expected.to respond_to(:in_journey?) }
-  it { is_expected.to respond_to(:touch_in).with(1).argument }
-  it { is_expected.to respond_to(:touch_out).with(1).argument }
   it { is_expected.to respond_to(:entry_station) }
+  it { is_expected.to respond_to(:journey) }
 
   it 'instance has default value of 0' do
     expect(oystercard.balance).to eq(0)
+  end
+
+  it ' shows that a card has an empty list of journeys' do
+    expect(oystercard.list_of_journeys).to be_empty
   end
 
   describe '#top_up' do
@@ -54,20 +57,17 @@ describe Oystercard do
       expect { oystercard.touch_in(entry_station) }.to raise_error 'Balance too low : Top up Please'
     end
 
-    it 'Raises an error when topped up and balance goes below £1' do
-      oystercard.top_up 1
-      oystercard.touch_out(exit_station)
-      expect { oystercard.touch_in(entry_station) }.to raise_error 'Balance too low : Top up Please'
+    # it 'Shows us the entry_station last touched in at' do
+    #   oystercard.top_up 10
+    #   oystercard.touch_in(entry_station)
+    #   expect(oystercard.entry_station).to eq entry_station
+    # end
+
+    it 'creates a new journey' do
+      oystercard.top_up 90
+      oystercard.touch_in(:station)
+      expect(oystercard.journey).to be_a Journey
     end
 
-    it 'Shows us the entry_station last touched in at' do
-      oystercard.top_up 10
-      oystercard.touch_in(entry_station)
-      expect(oystercard.entry_station).to eq entry_station
-    end
-
-    it ' shows that a card has an empty list of journeys' do
-      expect(oystercard.list_of_journeys).to be_empty
-    end
   end
 end
