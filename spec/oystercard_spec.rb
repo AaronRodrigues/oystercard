@@ -5,7 +5,7 @@ describe Oystercard do
   subject(:oystercard) { described_class.new }
   let(:entry_station) { double :entry_station }
   let(:exit_station) { double :exit_station }
-  # let(:journey) { double :journey }
+  let(:journey) { double :journey }
   it { is_expected.to respond_to(:in_journey?) }
   it { is_expected.to respond_to(:entry_station) }
   it { is_expected.to respond_to(:journey) }
@@ -30,38 +30,11 @@ describe Oystercard do
     expect { oystercard.top_up 1 }.to raise_error "Maximum balance of #{maximum_balance} exceeded"
   end
 
-  describe '#in_journey?' do
-    it 'returns false when oystercard is initialized' do
-      expect(oystercard.in_journey).to eq false
-    end
-    it 'returns true when oystercard is touched in' do
-      oystercard.top_up 90
-      oystercard.touch_in(entry_station)
-      expect(oystercard.in_journey?).to eq true
-    end
-    it 'returns false when oystercard is touched out' do
-      oystercard.top_up 90
-      oystercard.touch_in(entry_station)
-      oystercard.touch_out(exit_station)
-      expect(oystercard.in_journey?).to eq false
-    end
-  end
-
   describe '#touch_in' do
-    it 'Allows touch in when sufficient credit present' do
-      oystercard.top_up 90
-      expect(oystercard.touch_in(entry_station)).to eq true
-    end
 
     it 'Raises an error when balance below £1' do
       expect { oystercard.touch_in(entry_station) }.to raise_error 'Balance too low : Top up Please'
     end
-
-    # it 'Shows us the entry_station last touched in at' do
-    #   oystercard.top_up 10
-    #   oystercard.touch_in(entry_station)
-    #   expect(oystercard.entry_station).to eq entry_station
-    # end
 
     it 'creates a new journey' do
       oystercard.top_up 90
@@ -69,5 +42,29 @@ describe Oystercard do
       expect(oystercard.journey).to be_a Journey
     end
 
+    it 'save the journey with the entry station' do
+      oystercard.top_up 90
+      oystercard.touch_in(:station)
+      expect(oystercard.journey.entry_point).to eq :station
+    end
+
+    it 'saves a journey to the list of journeys' do
+      allow(journey).to receive(:start)
+      oystercard = Oystercard.new(journey)
+      oystercard.top_up 90
+      oystercard.touch_in(:station)
+      expect(oystercard.list_of_journeys).to eq [journey]
+    end
+  end
+
+  describe '#touch_out' do
+    it 'updates the journey object with an exit station' do
+      journey = Journey.new
+      oystercard = Oystercard.new(journey)
+      oystercard.top_up 90
+      oystercard.touch_in(:entry_station)
+      oystercard.touch_out(:exit_station)
+      expect(oystercard.list_of_journeys.last.exit_point).to eq :exit_station
+    end
   end
 end
