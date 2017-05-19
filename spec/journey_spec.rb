@@ -4,7 +4,7 @@ describe Journey do
   subject(:journey) { described_class.new(nil, nil) }
   let(:oystercard) { double('oystercard', touch_in: 'entry station', touch_out: 'exit station') }
   let(:journey_completed) { described_class.new('entry_point', 'exit_point') }
-  let(:oystercard2) {double("oystercard", touch_in: nil, touch_out: nil)}
+  let(:oystercard2) { double('oystercard', touch_in: nil, touch_out: nil) }
   let(:journey_with_no_touch_in) { described_class.new(nil, 'exit_point') }
   let(:journey_with_no_touch_out) { described_class.new('entry_point', nil) }
 
@@ -35,7 +35,7 @@ describe Journey do
 
   describe '#fare' do
     it 'calculates the fare' do
-    expect(journey_completed.fare).to eq described_class::MINIMUM_FARE
+      expect(journey_completed.fare).to eq described_class::MINIMUM_FARE
     end
 
     it "charges the penalty fare if a passenger doesn't touch in" do
@@ -43,7 +43,7 @@ describe Journey do
       expect(journey_with_no_touch_in.fare).to eq described_class::PENALTY_FARE
     end
 
-    it "has a penalty fare by default" do
+    it 'has a penalty fare by default' do
       expect(journey.fare).to eq described_class::PENALTY_FARE
     end
 
@@ -51,9 +51,9 @@ describe Journey do
       expect(journey_with_no_touch_out.fare).to eq described_class::PENALTY_FARE
     end
 
-    it "should return itself when exiting a journey" do
+    it 'should return itself when exiting a journey' do
       allow(journey).to receive(:finish) { journey }
-      expect(journey.finish("exit_point")).to eq(journey)
+      expect(journey.finish('exit_point')).to eq(journey)
     end
   end
 end
